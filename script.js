@@ -1,10 +1,4 @@
-const DEFAULT_WORDS = [
-    "bizarre", "chrysanthemum", "occurrence", "rhythm", "fascinate", 
-    "acquaintance", "guarantee", "harass", "embarrass", "accommodate",
-    "necessary", "millennium", "pharaoh", "pronunciation", "vacuum",
-    "weird", "restaurant", "silhouette", "maneuver", "mischievous",
-    "kaleidoscope", "camouflage", "entrepreneur", "zucchini", "broccoli",
-    "colossal", "dilemma", "fluorescent", "hypocrite", "lieutenant"
+
 ];
 let gameWordBank = [];
 let availableWords = [];
