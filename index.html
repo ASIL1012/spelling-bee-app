@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spelling Bee Practice</title>
+    <!-- Google Fonts for Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <!-- Tesseract JS for OCR -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <link rel="stylesheet" href="index.css">
+    <link rel="shortcut icon" href="pngtree-bee-logo-icon-png-image_12618028-removebg-preview.png" type="image/x-icon">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Setup Screen -->
+        <div id="start-screen" class="screen active">
+            <div class="glass-card">
+                <div class="icon-pulse">🐝</div>
+                <h1>Spelling Bee</h1>
+                <p>Configure your word list or scan a paper to begin.</p>
+
+                <div class="setup-area">
+                    <div class="dropdown">
+                        <button class="secondary-btn" style="width: 100%; margin-bottom: 10px;">Select Grade ▼</button>
+                        <div class="dropdown-content">
+                            <a href="#" id="grade-1-link">Grade 1</a>
+                            <a href="#" id="grade-4-link">Grade 3</a>
+                        </div>
+                    </div>
+
+                    <textarea id="custom-words-input" class="modern-input textarea-input"
+                        placeholder="Type words here separated by commas, or scan a paper below..."></textarea>
+
+                    <div class="scan-controls">
+                        <input type="file" id="scan-upload" accept="image/*" capture="environment" hidden>
+                        <button id="trigger-scan-btn" class="secondary-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                                <circle cx="12" cy="13" r="3" />
+                            </svg>
+                            Scan Paper List
+                        </button>
+                    </div>
+
+                    <div id="ocr-status" class="ocr-status hidden">
+                        <div class="spinner"></div>
+                        <span id="ocr-status-text">Scanning image... This may take a moment.</span>
+                    </div>
+                </div>
+
+                <button id="start-btn" class="primary-btn mt-4">
+                    Start Practice
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="glass-card game-layout">
+                <!-- Header Stats -->
+                <div class="stats-bar">
+                    <div class="stat-box timer-box">
+                        <span class="label">Time Remaining</span>
+                        <span id="timer" class="value">60s</span>
+                    </div>
+                    <div class="stat-box score-box">
+                        <span class="label">Attempted / Correct</span>
+                        <span class="value"><span id="attempted">0</span> / <span class="score-highlight"
+                                id="correct">0</span></span>
+                    </div>
+                </div>
+
+                <!-- Main Game Area -->
+                <div class="interaction-area">
+                    <div class="audio-feedback" id="audio-animation">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+
+                    <div id="teacher-word-display" class="word-display">...</div>
+                    <div id="feedback-message" class="feedback"></div>
+
+                    <div class="action-buttons">
+                        <button id="repeat-btn" class="secondary-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                                <path d="M3 3v5h5" />
+                            </svg>
+                            Repeat
+                        </button>
+                        <button id="skip-btn" class="secondary-btn" style="color: var(--warning); border: 1px solid rgba(255,193,7, 0.4);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m13 8 4 4-4 4"/>
+                                <path d="m5 8 4 4-4 4"/>
+                            </svg>
+                            Skip
+                        </button>
+                        <button id="wrong-btn" class="secondary-btn error-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 6 6 18M6 6l12 12" />
+                            </svg>
+                            Wrong
+                        </button>
+                        <button id="correct-btn" class="primary-btn success-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 6 9 17l-5-5" />
+                            </svg>
+                            Correct
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- End Screen -->
+        <div id="end-screen" class="screen">
+            <div class="glass-card">
+                <h2>Time's Up!</h2>
+                <div class="final-score">
+                    <p>You attempted <strong id="final-attempted" class="accent">0</strong> words.</p>
+                    <p>You got <strong id="final-correct" class="success-accent">0</strong> correct!</p>
+                </div>
+                <button id="restart-btn" class="primary-btn mt-4">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
